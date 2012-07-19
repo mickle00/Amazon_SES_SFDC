@@ -39,6 +39,7 @@ public with sharing class SESEmail {
 			email += '&Destination.ToAddresses.member.'+i+'='+EncodingUtil.urlEncode(this.toAddresses[i-1],'UTF-8');
 		} 
 		email += '&Message.Subject.Data='+EncodingUtil.urlEncode(this.subject,'UTF-8');
+		//TODO: Branch for HTML & Non-HTML Emails
 		email += '&Message.Body.Html.Data='+EncodingUtil.urlEncode(this.body,'UTF-8');
 		return email;
 	}
