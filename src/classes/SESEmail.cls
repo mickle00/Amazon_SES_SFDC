@@ -7,6 +7,7 @@
 
 public with sharing class SESEmail {
 	public List<String> toAddresses { get; set; }
+	public List<String> ccAddresses { get; set; }
 	public string fromAddress { get; set; }
 	public string subject { get; set; }
 	public string body { get; set; }
@@ -18,9 +19,10 @@ public with sharing class SESEmail {
 		set;
 	}
 
-	public SESEmail(List<String> toAddresses,String fromAddress,String subject, String body)
+	public SESEmail(List<String> toAddresses, List<String> ccAddresses, String fromAddress,String subject, String body)
 	{
 		this.toAddresses = toAddresses;
+		this.ccAddresses = ccAddresses;
 		this.fromAddress = fromAddress;
 		this.subject = subject;
 		this.body = body;
@@ -34,10 +36,13 @@ public with sharing class SESEmail {
 	{
 		String email = 'Action=SendEmail';
 		email += '&Source='+EncodingUtil.urlEncode(this.fromAddress,'UTF-8');
-		for(Integer i=1;i<this.toAddresses.size()+1;i++)
-		{
+		
+		for(Integer i=1;i<this.toAddresses.size()+1;i++){
 			email += '&Destination.ToAddresses.member.'+i+'='+EncodingUtil.urlEncode(this.toAddresses[i-1],'UTF-8');
-		} 
+		}
+		for(Integer i=1;i<this.ccAddresses.size()+1;i++){
+			email += '&Destination.CcAddresses.member.'+i+'='+EncodingUtil.urlEncode(this.ccAddresses[i-1],'UTF-8');
+		}  
 		email += '&Message.Subject.Data='+EncodingUtil.urlEncode(this.subject,'UTF-8');
 		//TODO: Branch for HTML & Non-HTML Emails
 		email += '&Message.Body.Html.Data='+EncodingUtil.urlEncode(this.body,'UTF-8');

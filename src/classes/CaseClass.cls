@@ -10,7 +10,8 @@ public with sharing class CaseClass {
         	myCase = updateCaseFromEmail(myReferenceId, email);
         }
         EmailMessageClass.logEmailMessage(myCase.Id, email);
-        EmailMessageClass.sendAutoResponse(myCase, email, envelope);
+        EmailMessageClass.sendAutoResponse(JSON.serialize(myCase), JSON.serialize(email), JSON.serialize(envelope));
+        
 		return myCase;
   }
   
@@ -24,8 +25,7 @@ public with sharing class CaseClass {
 		return null;
 	}
 	
-	public static string createReferenceId(Case myCase){
-		string caseId = myCase.Id;
+	public static string createReferenceId(string caseId){
 	    return ' [ ref:' + String.valueOf(Userinfo.getOrganizationId()).substring(0,4) + 
 			       String.valueOf(Userinfo.getOrganizationId()).substring(11,15) + '.' + 
 			       caseId.substring(0,4) + caseId.substring(10,15) + ':ref ]';
