@@ -24,8 +24,7 @@ public with sharing abstract class AWS {
 	 * format should be  Tue, 25 May 2010 21:20:27 +0000
 	 * http://docs.amazonwebservices.com/ses/latest/DeveloperGuide/index.html?HMACShaSignatures.html
 	 **/
-	public string awsFormattedDate(Datetime now)
-	{
+	public string awsFormattedDate(Datetime now){
 		return  now.formatGmt('EEE, d MMM yyyy HH:mm:ss Z');           
 	}
 
@@ -34,8 +33,7 @@ public with sharing abstract class AWS {
 	 * X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=<Your AWS Access Key ID>, Algorithm=HmacSHA256, Signature=<Signature>
 	 **/
 	 
-	public string headerForAmazonAuthorization(String accessKey, String signature)
-	{
+	public string headerForAmazonAuthorization(String accessKey, String signature){
 		return 'AWS3-HTTPS AWSAccessKeyId='+accessKey+', Algorithm=HmacSHA256, Signature='+signature;
 	}
 }

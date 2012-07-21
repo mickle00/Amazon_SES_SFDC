@@ -6,12 +6,11 @@ public with sharing class CaseClass {
         
         if (myReferenceId == null){
         	myCase = insertCaseFromEmail(email);
+        	EmailMessageClass.sendAutoResponse(JSON.serialize(myCase), JSON.serialize(email), JSON.serialize(envelope));
         } else{
         	myCase = updateCaseFromEmail(myReferenceId, email);
         }
         EmailMessageClass.logEmailMessage(myCase.Id, email);
-        EmailMessageClass.sendAutoResponse(JSON.serialize(myCase), JSON.serialize(email), JSON.serialize(envelope));
-        
 		return myCase;
   }
   
@@ -44,7 +43,7 @@ public with sharing class CaseClass {
 	
 	private static Case updateCaseFromEmail(string referenceId, Messaging.InboundEmail email){
 		Case myCase = findByReferenceId(referenceId);
-		myCase.Subject = 'Reply: Customer Email';
+		myCase.Status = 'Reply: Customer Email';
 		update myCase;
 		return myCase;
 	}

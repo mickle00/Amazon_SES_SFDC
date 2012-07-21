@@ -17,8 +17,7 @@ public class SES extends AWS {
     /**
      * Create the HTTP Request and send it off to AWS
      **/	
-	public void sendEmail(List<String> toAddresses, List<String> ccAddresses, String fromAddress, String subject, String body)
-	{	
+	public void sendEmail(List<String> toAddresses, List<String> ccAddresses, String fromAddress, String subject, String plainTextBody, String htmlBody){	
 		String awsFormattedNow=awsFormattedDate(Datetime.now());
 		
 		HttpRequest httpReq = new HttpRequest();
@@ -28,7 +27,7 @@ public class SES extends AWS {
 		httpReq.setHeader('Content-Type','application/x-www-form-urlencoded');
 		httpReq.setHeader('Date',awsFormattedNow);
 		
-		SESEmail newEmail = new SESEmail(toAddresses,ccAddresses,fromAddress,subject,body);
+		SESEmail newEmail = new SESEmail(toAddresses,ccAddresses,fromAddress,subject,plainTextBody, htmlBody);
 		
 		httpReq.setBody(newEmail.encodedEmail);
 		
@@ -41,6 +40,6 @@ public class SES extends AWS {
 	}
 	
 	public void sendEmail(SESEmail amazonEmail){
-		this.sendEmail(amazonEmail.toAddresses, amazonEmail.ccAddresses, amazonEmail.fromAddress, amazonEmail.subject, amazonEmail.body);
+		this.sendEmail(amazonEmail.toAddresses, amazonEmail.ccAddresses, amazonEmail.fromAddress, amazonEmail.subject, amazonEmail.plainTextBody, amazonEmail.htmlBody);
 	}
 }
