@@ -11,6 +11,8 @@ Primary purpose to allow for Reply-All Autoresponses
 
   *Properly weed out other SFDC Email-to-Case aliases; as well as known spam addresses
 
+  *Error handling of Amazon Web Service
+
 ####RISKS:
   *Separate Dependency on Amazon
 
