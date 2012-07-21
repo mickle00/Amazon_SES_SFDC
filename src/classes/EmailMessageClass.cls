@@ -74,7 +74,7 @@ public with sharing class EmailMessageClass {
 		string plainTextBody = 'CaseId = {!Id} \r\n\r\n' + email.plainTextBody;
 		string htmlBody = 'Thank you for Contacting Support<br/><br/>' + email.htmlBody;
 		
-		List<String> mergeFields = findAllMergeFields(plainTextBody);
+		List<List<String>> mergeFields = findAllMergeFields(plainTextBody);
 		plainTextBody = replaceMergeFields(mergeFields, plainTextBody, myCase);
 		system.debug('#############');
 		system.debug(plainTextBody);
@@ -86,6 +86,7 @@ public with sharing class EmailMessageClass {
 	}
 	
 	//Prevent sending an autoreply to yourself
+	//TODO: REMOVE KNOWN AUTO REPLY LOOP ADDRESSES
 	private static List<String> removeEmailAliasFromReply(List<String> sendToAddresses, string aliasToRemove){
 		List<String> cleanedAddresses = new List<String>();
 		for (String toAddress : sendToAddresses){
@@ -94,25 +95,29 @@ public with sharing class EmailMessageClass {
 		return cleanedAddresses;
 	}
 	
-	public static string replaceMergeFields(List<String> mergeFields, string fullText, sObject mySObject){
-		for (String mergeField : mergeFields){
-			system.debug ('{!' + mergeField + '}');
-			if (fullText.contains('{!' + mergeField + '}')) {
-				String replacementValue = string.valueOf(mySobject.get(mergeField));
-				fullText = fullText.replace('{!' + mergeField + '}', replacementValue);
+	public static string replaceMergeFields(List<List<String>> mergeFields, string fullText, sObject mySObject){
+		for (List<String> mergeField : mergeFields){
+			system.debug ('{!' + mergeField[0] + '.' + mergeField[1] + '}');
+			if (fullText.contains('{!'  + mergeField[0] + '.' +mergeField[1] + '}')) {
+				String replacementValue = string.valueOf(mySobject.get(mergeField[1]));
+				fullText = fullText.replace('{!'  + mergeField[0] + '.' +mergeField[1] + '}', replacementValue);
 			}
 		}
 		return fullText;
 	}
-	public static List<String> findAllMergeFields(string fullText){
-		List<String> mergeFields = new List<String>();
+	public static List<List<String>> findAllMergeFields(string fullText){
+		List<List<String>> mergeFields = new List<List<String>>();
 		Integer startingPoint = 0;
 				
 		while (fullText.indexOf('{!', startingPoint) != -1){
+			List<String> objectFieldList = new List<String>();
 			Integer beginningPoint = fullText.indexOf('{!', startingPoint) + 2;
 			Integer endingPoint = fullText.indexOf('}', startingPoint);
 			String subString = fullText.substring(beginningPoint, endingPoint);
-			mergeFields.add(subString);
+			objectFieldList = subString.split('\\.', 2);
+			system.debug('OBJECT FIELD LIST');
+			system.debug(objectFieldList);
+			mergeFields.add(objectFieldList);
 			startingPoint = endingPoint + 1;
 		}
 		return mergeFields;
