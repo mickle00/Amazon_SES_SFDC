@@ -9,6 +9,8 @@ Primary purpose to allow for Reply-All Autoresponses
 
   *Properly Handle Merge Fields, including relationships and NULLVALUE() Function
 
+  *Properly weed out other SFDC Email-to-Case aliases; as well as known spam addresses
+
 ####RISKS:
   *Separate Dependency on Amazon
 
