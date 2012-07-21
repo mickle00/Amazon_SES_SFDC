@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsType>List</customSettingsType>
     <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>Stores API Keys for various external sources e.g., Amazon, Google</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Key__c</fullName>
@@ -17,9 +18,9 @@
         <externalId>false</externalId>
         <label>Secret</label>
         <length>50</length>
-        <required>true</required>
+        <required>false</required>
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <label>AWSKey</label>
+    <label>API Key</label>
 </CustomObject>

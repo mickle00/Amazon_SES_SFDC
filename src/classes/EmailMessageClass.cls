@@ -58,8 +58,8 @@ public with sharing class EmailMessageClass {
 		Type sObjectType = Type.forName('Case'); 
 		Case myCase = (Case) JSON.deserialize(myCaseJSON, sObjectType);
 		
-		AWSKeys myCredentials = AWSKeys.getInstance('Amazon');
-		SES amazonEmailService = new SES(myCredentials.key, myCredentials.secret);
+		APIKeyClass apiKeys = new APIKeyClass();
+		SES amazonEmailService = new SES(apiKeys.getInstance('Amazon').key__c, apiKeys.getInstance('Amazon').secret__c);
 		
 		List<String> toAddresses = new List<String>{email.fromAddress};
 		toAddresses.addAll(email.toAddresses);
@@ -71,13 +71,11 @@ public with sharing class EmailMessageClass {
 		//		EmailTemplate myTemplate = [SELECT * FROM EmailTemplate WHERE Id = :emailTemplateId];
 				
 		string subject = 'RE: ' + email.subject + ' ' + CaseClass.createReferenceId(myCase.Id);
-		string plainTextBody = 'CaseId = {!Id} \r\n\r\n' + email.plainTextBody;
+		string plainTextBody = 'CaseId = {!Case.Id} \r\n\r\n' + email.plainTextBody;
 		string htmlBody = 'Thank you for Contacting Support<br/><br/>' + email.htmlBody;
 		
 		List<List<String>> mergeFields = findAllMergeFields(plainTextBody);
 		plainTextBody = replaceMergeFields(mergeFields, plainTextBody, myCase);
-		system.debug('#############');
-		system.debug(plainTextBody);
 		
 		SESEmail amazonEmail = new SESEmail (toAddresses, ccAddresses, envelope.toAddress, subject, plainTextBody, htmlBody);
 		//TODO: Trap for Errors
