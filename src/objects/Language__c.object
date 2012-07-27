@@ -61,6 +61,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>ISO_Code__c</fullName>
+        <externalId>false</externalId>
+        <label>ISO Code</label>
+        <length>5</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Localization_Sort_Order__c</fullName>
         <description>Localization Sort Order</description>
         <externalId>false</externalId>
