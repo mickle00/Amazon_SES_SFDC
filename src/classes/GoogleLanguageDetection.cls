@@ -12,7 +12,7 @@ public class GoogleLanguageDetection extends GoogleTranslate {
     }
     
     public double confidence{
-    	get { return this.data.detections[0][0].confidence; }
+    	get { return this.data.detections[0][0].confidence * 100; } //return a percent as opposed to decimal
     	set;
     }
     
@@ -21,7 +21,7 @@ public class GoogleLanguageDetection extends GoogleTranslate {
     	set;
     }
     
-    public GoogleLanguageDetection detectLanguage (String source){
+    public GoogleLanguageDetection detectSourceLanguage (String source){
         HttpRequest req = new HttpRequest();
         HttpResponse res = new HttpResponse();
         Http http = new Http(); 

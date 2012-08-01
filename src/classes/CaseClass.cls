@@ -6,6 +6,7 @@ public with sharing class CaseClass {
         
         if (myReferenceId == null){
         	myCase = insertCaseFromEmail(email);
+        	//Remove attachments to reduce heap size??
         	EmailMessageClass.sendAutoResponse(JSON.serialize(myCase), JSON.serialize(email), JSON.serialize(envelope));
         } else{
         	myCase = updateCaseFromEmail(myReferenceId, email);
@@ -32,11 +33,15 @@ public with sharing class CaseClass {
 	}
 	
 	private static Case insertCaseFromEmail(Messaging.InboundEmail email){
+		GoogleLanguageDetection myDetection = GoogleTranslate.detectLanguage(email.subject);
+		Language__c myLanguage = LanguageClass.findByISOCode(myDetection.detectedLanguage);
 		Case myCase = new Case(Subject = email.subject
 							  ,Description = email.plainTextBody
 							  ,SuppliedEmail = email.fromAddress
                               ,SuppliedName = email.fromName
-                              ,Origin = 'Email');
+                              ,Origin = 'Email'
+                              ,Language__c = myLanguage.Id
+                              ,Language_Confidence__c = myDetection.confidence);
 		insert myCase;
 		return myCase;
 	}

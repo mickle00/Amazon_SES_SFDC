@@ -94,6 +94,8 @@ public with sharing class EmailMessageClass {
 	}
 	
 	public static string replaceMergeFields(List<List<String>> mergeFields, string fullText, sObject mySObject){
+		if (fullText == null || fullText == '') return '';
+		//Should call findAllMergeFields from here
 		for (List<String> mergeField : mergeFields){
 			system.debug ('{!' + mergeField[0] + '.' + mergeField[1] + '}');
 			if (fullText.contains('{!'  + mergeField[0] + '.' +mergeField[1] + '}')) {
