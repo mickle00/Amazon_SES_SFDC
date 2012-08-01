@@ -49,6 +49,13 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Default__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Default</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Email_Template_Id__c</fullName>
         <externalId>false</externalId>
         <label>Email Template Id</label>
