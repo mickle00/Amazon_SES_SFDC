@@ -38,6 +38,7 @@ public with sharing class EmailMessageClass {
 	                                          //,FromName = CaseTeam.findByEmailServiceAddress(amazonEmail.fromAddress).Name
 	                                          ,ToAddress = Utilities.listToDelimitedString(amazonEmail.toAddresses, ';')
 	                                          ,TextBody = amazonEmail.plainTextBody
+	                                          ,HtmlBody = amazonEmail.htmlBody
 	                                          ,MessageDate = system.now()
 	                                          ,CCAddress = Utilities.listToDelimitedString(amazonEmail.ccAddresses, ';')
 	                                          //TODO: Fix
@@ -65,17 +66,17 @@ public with sharing class EmailMessageClass {
 		toAddresses.addAll(email.toAddresses);
 		toAddresses = removeEmailAliasFromReply(toAddresses, envelope.toAddress);
 		List<String> ccAddresses = email.ccAddresses;
-		
-		//TODO: IMPLEMENT EMAIL TEMPLATES AND MERGE FIELDS
-		//			Id EmailTemplateId 	 = CaseTeam.findByEmailServiceAddress(amazonEmail.fromAddress).EmailTemplateId;
-		//		EmailTemplate myTemplate = [SELECT * FROM EmailTemplate WHERE Id = :emailTemplateId];
 				
 		string subject = 'RE: ' + email.subject + ' ' + CaseClass.createReferenceId(myCase.Id);
-		string plainTextBody = 'CaseId = {!Case.Id} \r\n\r\n' + email.plainTextBody;
-		string htmlBody = 'Thank you for Contacting Support<br/><br/>' + email.htmlBody;
+		
+		EmailTemplate myEmailTemplate = EmailTemplateClass.findByLanguageOrDefault(envelope.toAddress, myCase.Language__c);
+		
+		string plainTextBody = EmailTemplateClass.getReplyText(myEmailTemplate.body, '\r\n', email.plainTextBody);
+		string htmlBody = EmailTemplateClass.getReplyText(myEmailTemplate.body, '<br/>', email.htmlBody);
 		
 		List<List<String>> mergeFields = findAllMergeFields(plainTextBody);
 		plainTextBody = replaceMergeFields(mergeFields, plainTextBody, myCase);
+		htmlBody = replaceMergeFields(mergeFields, htmlBody, myCase);
 		
 		SESEmail amazonEmail = new SESEmail (toAddresses, ccAddresses, envelope.toAddress, subject, plainTextBody, htmlBody);
 		//TODO: Trap for Errors
@@ -85,6 +86,7 @@ public with sharing class EmailMessageClass {
 	
 	//Prevent sending an autoreply to yourself
 	//TODO: REMOVE KNOWN AUTO REPLY LOOP ADDRESSES
+	// Convert to Set and use removeAll()
 	private static List<String> removeEmailAliasFromReply(List<String> sendToAddresses, string aliasToRemove){
 		List<String> cleanedAddresses = new List<String>();
 		for (String toAddress : sendToAddresses){

@@ -23,4 +23,12 @@ public with sharing class Utilities {
 		List<Schema.sObjectType> P = F.getReferenceTo();
 		system.debug(P);	
 	}
+	
+	public static String repeatString(string myString, integer count){
+		string returnText ='';
+		for (Integer i=0; i<count; i++){
+			returnText = returnText + myString;
+		}
+		return returnText;
+	}
 }
