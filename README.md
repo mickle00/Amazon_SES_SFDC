@@ -2,7 +2,16 @@ Amazon SES SFDC
 ===============
 Utility for Sending Email using Amazon SES from Salesforce.com
 Primary purpose to allow for Reply-All Autoresponses
+Added Google Translate API to determine source language
 
+http://aws.amazon.com/ses/
+*$0.10 per 10,000 Emails (A single email communication sent to multiple recipients is considered to be a unique messsage sent to each recipient)
+12,000 Cases a Day, Average of 3 Reply-All= $0.12 * 3 = $0.36/day
+
+https://developers.google.com/translate/
+*$20 per 1,000,000 characters of text
+*Average 42 Character Subject Line = $0.00084 per email
+*12,000 emails a day = $10.08 per day
 
 ####TODO:
   *Dynamically pull Email Template

@@ -98,6 +98,18 @@ public with sharing class EmailMessageClass {
 	public static string replaceMergeFields(List<List<String>> mergeFields, string fullText, sObject mySObject){
 		if (fullText == null || fullText == '') return '';
 		//Should call findAllMergeFields from here
+		//TODO: Need to requery sObject to get all fields in mergeFields using dynamic SOQL
+		string queryString = '';
+		for (List<String> mergeField : mergeFields){
+			queryString += mergeField[1] +',';
+		}
+		queryString = queryString.subString(0,queryString.length()-1);
+		
+		queryString = 'SELECT ' + queryString + ' FROM ' + mySObject.getSObjectType() + ' WHERE Id = \'' + mySObject.Id +'\'';
+		system.debug(queryString);
+		
+		mySObject = database.query(queryString);
+		
 		for (List<String> mergeField : mergeFields){
 			system.debug ('{!' + mergeField[0] + '.' + mergeField[1] + '}');
 			if (fullText.contains('{!'  + mergeField[0] + '.' +mergeField[1] + '}')) {
